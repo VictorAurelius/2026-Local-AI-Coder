@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker:*)",
+      "Bash(docker compose:*)",
+      "Bash(powershell.exe -Command \"Get-CimInstance Win32_ComputerSystem | Select-Object TotalPhysicalMemory | Format-List\")",
+      "Bash(chmod:*)",
+      "Bash(./scripts/setup.sh:*)",
+      "Bash(jq:*)",
+      "Bash(curl:*)",
+      "Bash(./scripts/health-check.sh:*)",
+      "Bash(powershell.exe -Command \"New-Item -ItemType File -Path ''C:\\\\Users\\\\ADMIN\\\\.wslconfig'' -Force | Out-Null; Set-Content -Path ''C:\\\\Users\\\\ADMIN\\\\.wslconfig'' -Value ''[wsl2]\nmemory=28GB\nprocessors=8\nswap=8GB\nlocalhostForwarding=true'' -Encoding ASCII; Get-Content ''C:\\\\Users\\\\ADMIN\\\\.wslconfig''\")",
+      "Bash(powershell.exe -Command \"Write-Host ''Đang shutdown WSL2...''; wsl --shutdown; Start-Sleep -Seconds 3; Write-Host ''WSL2 đã shutdown. Hãy khởi động lại Docker Desktop.''\")"
+    ]
+  }
+}
