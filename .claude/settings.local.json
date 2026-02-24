@@ -10,7 +10,25 @@
       "Bash(curl:*)",
       "Bash(./scripts/health-check.sh:*)",
       "Bash(powershell.exe -Command \"New-Item -ItemType File -Path ''C:\\\\Users\\\\ADMIN\\\\.wslconfig'' -Force | Out-Null; Set-Content -Path ''C:\\\\Users\\\\ADMIN\\\\.wslconfig'' -Value ''[wsl2]\nmemory=28GB\nprocessors=8\nswap=8GB\nlocalhostForwarding=true'' -Encoding ASCII; Get-Content ''C:\\\\Users\\\\ADMIN\\\\.wslconfig''\")",
-      "Bash(powershell.exe -Command \"Write-Host ''Đang shutdown WSL2...''; wsl --shutdown; Start-Sleep -Seconds 3; Write-Host ''WSL2 đã shutdown. Hãy khởi động lại Docker Desktop.''\")"
+      "Bash(powershell.exe -Command \"Write-Host ''Đang shutdown WSL2...''; wsl --shutdown; Start-Sleep -Seconds 3; Write-Host ''WSL2 đã shutdown. Hãy khởi động lại Docker Desktop.''\")",
+      "Bash(netstat:*)",
+      "Bash(powershell.exe -Command \"Start-Process ''http://localhost:3000''\")",
+      "Bash(./scripts/tunnel-server-setup.sh)",
+      "Bash(sudo -S systemctl:*)",
+      "Bash(sudo -S apt update:*)",
+      "Bash(sudo -S apt install:*)",
+      "Bash(ip route show:*)",
+      "Bash(powershell.exe -Command \"ipconfig\")",
+      "Bash(history -c:*)",
+      "Bash(history -w:*)",
+      "Bash(sudo -S sed:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(sh:*)",
+      "Bash(sudo -S grep:*)",
+      "Bash(sudo tee:*)",
+      "Bash(tailscale ip:*)",
+      "Bash(sudo -S ss:*)",
+      "Bash(nano:*)"
     ]
   }
 }
