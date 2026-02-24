@@ -1,0 +1,87 @@
+version: "3.8"
+
+# ============================================================================
+# Local AI Coder — Docker Compose
+# Chạy Ollama + Qwen3-Coder 30B + Open WebUI hoàn toàn local
+# ============================================================================
+
+services:
+
+  # --------------------------------------------------------------------------
+  # Ollama — Engine chạy model AI
+  # --------------------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama-data:/root/.ollama           # Lưu model đã tải
+      - ./modelfiles:/modelfiles:ro         # Custom modelfiles
+    environment:
+      - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE:-5m}
+      - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-1}
+      - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-1}
+    deploy:
+      resources:
+        limits:
+          memory: ${OLLAMA_MEMORY_LIMIT:-28g}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    networks:
+      - ai-network
+
+  # --------------------------------------------------------------------------
+  # Open WebUI — Giao diện chat giống ChatGPT
+  # --------------------------------------------------------------------------
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "${WEBUI_PORT:-3000}:8080"
+    volumes:
+      - webui-data:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_AUTH=${WEBUI_AUTH:-true}
+      - ENABLE_SIGNUP=${ENABLE_SIGNUP:-false}     # Tắt đăng ký tự do
+      - DEFAULT_MODELS=qwen3-coder:30b
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks:
+      - ai-network
+
+  # --------------------------------------------------------------------------
+  # Nginx — Reverse proxy + IP whitelist (tùy chọn)
+  # Bỏ comment khối bên dưới nếu muốn dùng Nginx bảo vệ API
+  # --------------------------------------------------------------------------
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: ai-proxy
+  #   restart: unless-stopped
+  #   ports:
+  #     - "${PROXY_PORT:-11435}:11435"
+  #   volumes:
+  #     - ./nginx/ollama-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+  #   depends_on:
+  #     ollama:
+  #       condition: service_healthy
+  #   networks:
+  #     - ai-network
+
+volumes:
+  ollama-data:
+    name: ollama-data
+  webui-data:
+    name: webui-data
+
+networks:
+  ai-network:
+    driver: bridge
